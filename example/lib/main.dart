@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:card_swiper/card_swiper.dart';
+import 'package:example/src/test_example.dart';
 import 'package:flutter/material.dart';
 
 import 'src/config.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       home: const MyHomePage(title: 'Flutter Swiper'),
       routes: {
+        '/example00': (context) => const TestExamplePage(),
         '/example01': (context) => const ExampleHorizontal(),
         '/example02': (context) => const ExampleVertical(),
         '/example03': (context) => const ExampleFraction(),
@@ -94,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: ListView(
         children: render(context, [
+          ['TEST', 'TEST EXAMPLE', '/example00'],
           ['Horizontal', 'Scroll Horizontal', '/example01'],
           ['Vertical', 'Scroll Vertical', '/example02'],
           ['Fraction', 'Fraction style', '/example03'],
