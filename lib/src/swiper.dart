@@ -915,47 +915,41 @@ class _StackViewState extends _CustomLayoutStateBase<_StackSwiper> {
   @override
   void afterRender() {
     super.afterRender();
-    final isRightSide = widget.axisDirection == AxisDirection.right;
-
     //length of the values array below
     _animationCount = 5;
 
     //Array below this line, '0' index is 1.0, which is the first item show in swiper.
-    _startIndex = isRightSide ? -1 : -3;
-    scales =
-        isRightSide ? [1.0, 1.0, 0.9, 0.8, 0.7] : [0.7, 0.8, 0.9, 1.0, 1.0];
-    opacity =
-        isRightSide ? [1.0, 1.0, 1.0, 0.5, 0.0] : [0.0, 0.5, 1.0, 1.0, 1.0];
+    _startIndex = -3;
+    scales = [0.0, 0.1, 0.2, 1.0, 1.0];
+    opacity = [0.0, 0.2, 0.5, 1.0, 1.0];
 
     _updateValues();
   }
 
   @override
   Widget _buildItem(int i, int realIndex, double animationValue) {
+    /// movement parallax
     final s = _getValue(scales, animationValue, i);
+
+    /// movement
     final f = _getValue(offsets, animationValue, i);
+
+    /// white bg
     final o = _getValue(opacity, animationValue, i);
 
-    final offset = widget.scrollDirection == Axis.horizontal
-        ? widget.axisDirection == AxisDirection.left
-            ? Offset(f, 0.0)
-            : Offset(-f, 0.0)
-        : Offset(0.0, f);
+    final itemHeightPercent = widget.itemHeight! * .2;
+    print('itemHeightPercent - $itemHeightPercent');
 
-    final alignment = widget.scrollDirection == Axis.horizontal
-        ? widget.axisDirection == AxisDirection.left
-            ? Alignment.centerLeft
-            : Alignment.centerRight
-        : Alignment.topCenter;
-
-    return Opacity(
-      opacity: o,
+    return Transform.translate(
+      key: ValueKey<int>(_currentIndex + i),
+      offset: Offset(0.0, f),
       child: Transform.translate(
-        key: ValueKey<int>(_currentIndex + i),
-        offset: offset,
-        child: Transform.scale(
-          scale: s,
-          alignment: alignment,
+        offset: Offset(0.0, 0.0 - (itemHeightPercent - itemHeightPercent * s)),
+        child: ColorFiltered(
+          colorFilter: ColorFilter.mode(
+            Colors.white.withOpacity(1 - o),
+            BlendMode.colorDodge,
+          ),
           child: SizedBox(
             width: widget.itemWidth ?? double.infinity,
             height: widget.itemHeight ?? double.infinity,
