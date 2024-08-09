@@ -938,7 +938,6 @@ class _StackViewState extends _CustomLayoutStateBase<_StackSwiper> {
     final o = _getValue(opacity, animationValue, i);
 
     final itemHeightPercent = widget.itemHeight! * .2;
-    print('itemHeightPercent - $itemHeightPercent');
 
     return Transform.translate(
       key: ValueKey<int>(_currentIndex + i),
