@@ -72,6 +72,7 @@ class Swiper extends StatefulWidget {
     this.scale,
     this.fade,
     this.allowImplicitScrolling = false,
+    this.stackSwiperBackgroundColor,
   })  : assert(
           itemBuilder != null || transformer != null,
           'itemBuilder and transformItemBuilder must not be both null',
@@ -246,6 +247,9 @@ class Swiper extends StatefulWidget {
   final PageIndicatorLayout indicatorLayout;
 
   final bool allowImplicitScrolling;
+
+  /// Stack Swiper Background Color which display when [Swiper.layout] is [SwiperLayout.STACK] and swiping
+  final Color? stackSwiperBackgroundColor;
 
   static Swiper list<T>({
     PageTransformer? transformer,
@@ -502,6 +506,7 @@ class _SwiperState extends _SwiperTimerMixin {
         controller: _controller,
         scrollDirection: widget.scrollDirection,
         axisDirection: widget.axisDirection,
+        stackSwiperBackgroundColor: widget.stackSwiperBackgroundColor,
       );
     } else if (_isPageViewLayout()) {
       //default
@@ -770,6 +775,7 @@ class _StackSwiper extends _SubSwiper {
   const _StackSwiper({
     Key? key,
     required Curve curve,
+    required this.stackSwiperBackgroundColor,
     int? duration,
     required SwiperController controller,
     ValueChanged<int>? onIndexChanged,
@@ -796,6 +802,8 @@ class _StackSwiper extends _SubSwiper {
           scrollDirection: scrollDirection,
           axisDirection: axisDirection,
         );
+
+  final Color? stackSwiperBackgroundColor;
 
   @override
   State<StatefulWidget> createState() => _StackViewState();
@@ -946,8 +954,9 @@ class _StackViewState extends _CustomLayoutStateBase<_StackSwiper> {
         offset: Offset(0.0, 0.0 - (itemHeightPercent - itemHeightPercent * s)),
         child: ColorFiltered(
           colorFilter: ColorFilter.mode(
-            Colors.white.withOpacity(1 - o),
-            BlendMode.colorDodge,
+            (widget.stackSwiperBackgroundColor ?? Colors.white)
+                .withOpacity(1 - o),
+            BlendMode.srcOver,
           ),
           child: SizedBox(
             width: widget.itemWidth ?? double.infinity,
